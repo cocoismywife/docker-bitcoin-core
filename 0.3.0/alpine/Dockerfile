@@ -95,7 +95,7 @@ RUN apk --no-cache add \
   libzmq \
   su-exec
 
-ENV OMNICORE_DATA=/home/bitcoin/.bitcoin
+ENV OMNI_DATA=/home/bitcoin/.bitcoin
 ENV OMNI_VERSION=0.3.0
 ENV OMNI_PREFIX=/opt/omnicore-${OMNI_VERSION}
 ENV PATH=${OMNI_PREFIX}/bin:$PATH
