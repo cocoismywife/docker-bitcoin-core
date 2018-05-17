@@ -53,10 +53,7 @@ RUN set -ex \
 ENV OMNI_VERSION=0.3.0
 ENV OMNI_PREFIX=/opt/omnicore-${OMNI_VERSION}
 
-RUN wget -O SHA256SUMS.asc https://github.com/OmniLayer/omnicore/releases/download/v${OMNI_VERSION}/omnicore-${OMNI_VERSION}-x86_64-linux-gnu.tar.gz.asc
-RUN wget -O omnicore-${OMNI_VERSION}.tar.gz https://github.com/OmniLayer/omnicore/releases/download/v${OMNI_VERSION}/omnicore-${OMNI_VERSION}-x86_64-linux-gnu.tar.gz
-RUN gpg --verify SHA256SUMS.asc
-RUN grep " omnicore-${OMNI_VERSION}.tar.gz\$" SHA256SUMS.asc | sha256sum -c -
+RUN wget -O omnicore-${OMNI_VERSION}.tar.gz https://github.com/OmniLayer/omnicore/archive/v${OMNI_VERSION}.tar.gz
 RUN tar -xzf *.tar.gz
 
 WORKDIR /omnicore-${OMNI_VERSION}
@@ -75,11 +72,12 @@ RUN ./configure LDFLAGS=-L`ls -d /opt/db*`/lib/ CPPFLAGS=-I`ls -d /opt/db*`/incl
     --with-utils \
     --with-libs \
     --with-daemon
-RUN make -j4
+RUN make
 RUN make install
+RUN ls -al ${OMNI_PREFIX}/bin
+RUN strip ${OMNI_PREFIX}/bin/bitcoin-tx
 RUN strip ${OMNI_PREFIX}/bin/omnicore-cli 
 RUN strip ${OMNI_PREFIX}/bin/omnicored
-RUN strip ${OMNI_PREFIX}/bin/qt/omnicore-qt
 RUN strip ${OMNI_PREFIX}/lib/libbitcoinconsensus.a
 RUN strip ${OMNI_PREFIX}/lib/libbitcoinconsensus.so.0.0.0
 
